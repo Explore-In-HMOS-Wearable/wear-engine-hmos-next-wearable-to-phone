@@ -1,0 +1,60 @@
+{
+  "module": {
+    "name": "application",
+    "type": "entry",
+    "description": "$string:module_desc",
+    "mainElement": "HiWearMainAbility",
+    "deviceTypes": [
+      "wearable"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "HiWearMainAbility",
+        "srcEntry": "./ets/hiwearmainability/HiWearMainAbility.ets",
+        "description": "$string:HiWearMainAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:HiWearMainAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ]
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "EntryBackupAbility",
+        "srcEntry": "./ets/hiwearmainability/HiWearMainAbility.ets/",
+        "type": "backup",
+        "exported": false,
+        "metadata": [
+          {
+            "name": "ohos.extension.backup",
+            "resource": "$profile:main_pages"
+          }
+        ],
+      }
+    ],
+    "metadata": [
+      {
+        "name": "wearEngineRemoteAppNameList",
+        "value": "YOUR_MOBILE_PACKAGE_NAME"
+      },
+      {
+        "name": "wearEngineAwaitRegisterReceiver",
+        "value": "true"
+      }
+    ]
+  }
+}
