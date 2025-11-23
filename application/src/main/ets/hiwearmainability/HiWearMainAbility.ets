@@ -1,4 +1,4 @@
-import { AbilityConstant,ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 
@@ -18,7 +18,7 @@ export default class HiWearMainAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     hilog.info(0x0000, 'HiWearMainAbility', '%{public}s', 'Ability onWindowStageCreate');
 
-    windowStage.loadContent("pages/Index", (err, data) => {
+    windowStage.loadContent('pages/Index', (err, data) => {
       if (err.code) {
         hilog.error(0x0000, 'HiWearMainAbility', 'Failed to load the content. Cause: %{public}s',
           JSON.stringify(err) ?? '');

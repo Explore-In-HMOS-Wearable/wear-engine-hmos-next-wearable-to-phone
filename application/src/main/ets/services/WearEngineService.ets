@@ -31,7 +31,9 @@ export class WearEngineService {
   }
 
   async isRemoteAppInstalled(): Promise<boolean> {
-    if (!this.targetDevice) return false;
+    if (!this.targetDevice) {
+      return false;
+    }
     try {
       return await this.p2pClient.isRemoteAppInstalled(this.targetDevice.randomId, this.bundleName);
     } catch (error) {
@@ -44,7 +46,9 @@ export class WearEngineService {
     messageCallback: Callback<wearEngine.P2pMessage>,
     fileCallback: Callback<wearEngine.P2pFile>
   ): Promise<void> {
-    if (!this.targetDevice) return;
+    if (!this.targetDevice) {
+      return;
+    }
 
     const appInfo: wearEngine.AppInfo = {
       bundleName: this.bundleName,
@@ -60,7 +64,9 @@ export class WearEngineService {
   }
 
   async sendMessage(messageText: string): Promise<wearEngine.P2pResult | undefined> {
-    if (!this.targetDevice) return;
+    if (!this.targetDevice) {
+      return;
+    }
 
     const appInfo: wearEngine.AppInfo = {
       bundleName: this.bundleName,
@@ -76,15 +82,16 @@ export class WearEngineService {
     };
 
     try {
-      return await this.p2pClient.sendMessage(this.targetDevice.randomId, appParam, message);
+      await this.p2pClient.sendMessage(this.targetDevice.randomId, appParam, message);
     } catch (error) {
       hilog.error(0x0000, 'WearEngineService', `sendMessage error: ${error.code}, ${error.message}`);
-      return undefined;
     }
   }
 
   async sendFile(filePath: string): Promise<void> {
-    if (!this.targetDevice) return;
+    if (!this.targetDevice) {
+      return;
+    }
 
     const appInfo: wearEngine.AppInfo = {
       bundleName: this.bundleName,
@@ -95,17 +102,24 @@ export class WearEngineService {
       remoteApp: appInfo
     };
 
+    const fileDescriptor = fs.openSync(filePath);
     const p2pFile: wearEngine.P2pFile = {
-      file: fs.openSync(filePath)
+      file: fileDescriptor
     };
 
-    this.p2pClient.transferFile(this.targetDevice.randomId, appParam, p2pFile, (error, result) => {
-      if (error) {
-        hilog.error(0x0000, 'WearEngineService', `sendFile error: ${error.code}, ${error.message}`);
-        return;
-      }
-      hilog.info(0x0000, 'WearEngineService', `sendFile result: ${result.code}, progress: ${result.progress}`);
-    });
+    try {
+      this.p2pClient.transferFile(this.targetDevice.randomId, appParam, p2pFile, (error, result) => {
+        if (error) {
+          hilog.error(0x0000, 'WearEngineService', `sendFile error: ${error.code}, ${error.message}`);
+          return;
+        }
+        hilog.info(0x0000, 'WearEngineService', `sendFile result: ${result.code}, progress: ${result.progress}`);
+      });
+    } catch (e) {
+      hilog.error(0x0000, 'WearEngineService', `sendFile error: ${e}`);
+    } finally {
+      fs.closeSync(p2pFile.file);
+    }
   }
 
   decodeMessage(content: Uint8Array): string {

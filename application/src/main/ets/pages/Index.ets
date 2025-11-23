@@ -1,4 +1,4 @@
-import { fileUri, fileIo as fs } from '@kit.CoreFileKit';
+import { fileUri } from '@kit.CoreFileKit';
 import promptAction from '@ohos.promptAction';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { WearEngineService } from '../services/WearEngineService';
@@ -8,7 +8,6 @@ import { WearEngineService } from '../services/WearEngineService';
 struct Index {
   private context = this.getUIContext().getHostContext() as Context;
   private wearService = new WearEngineService(this.context);
-
   @State msgFromWatch: string = '';
   receivedLog: string = 'Hi Wear Engine';
   msgToWatch: string = 'Hi, Wear Engine!';
@@ -20,12 +19,16 @@ struct Index {
 
   private logInfo(msg: string, toast: boolean = false): void {
     hilog.info(0x0000, 'Wear Engine Operation:', '%{public}s', msg);
-    if (toast) this.showToastMessage(msg);
+    if (toast) {
+      this.showToastMessage(msg);
+    }
   }
 
   private logError(msg: string, toast: boolean = false): void {
     hilog.error(0x0000, 'Wear Engine Operation:', '%{public}s', msg);
-    if (toast) this.showToastMessage(msg);
+    if (toast) {
+      this.showToastMessage(msg);
+    }
   }
 
   aboutToAppear(): void {
@@ -42,7 +45,7 @@ struct Index {
     const isInstalled = await this.wearService.isRemoteAppInstalled();
     if (!isInstalled) {
       this.logError('Remote app not installed.', true);
-      // return;
+      return;
     }
 
     await this.wearService.registerReceiver(
@@ -92,14 +95,14 @@ struct Index {
 
         Column() {
           Button($r('app.string.button_send_message'))
-            .width("100%")
+            .width('100%')
             .height(35)
             .margin({ bottom: 6 })
             .onClick(() => this.sendMessage())
             .fontWeight(FontWeight.Bold)
 
           Button($r('app.string.button_send_file'))
-            .width("100%")
+            .width('100%')
             .height(35)
             .onClick(() => this.sendFile())
             .fontWeight(FontWeight.Bold)
@@ -124,7 +127,12 @@ struct Index {
           .textAlign(TextAlign.End)
           .maxLines(5)
       }
-      .padding({ right: 30, left: 30, top: 20, bottom: 20 })
+      .padding({
+        right: 30,
+        left: 30,
+        top: 20,
+        bottom: 20
+      })
       .backgroundColor(Color.White)
       .width('100%')
     }
